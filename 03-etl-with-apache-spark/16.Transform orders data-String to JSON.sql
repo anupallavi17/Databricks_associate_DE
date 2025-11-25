@@ -24,7 +24,7 @@ SELECT value,
 
 -- COMMAND ----------
 
-SELECT schema_of_json(fixed_value), fixed_value from anallasw_bronze_orders_tv
+SELECT schema_of_json(fixed_value) as schema , fixed_value from anallasw_bronze_orders_tv
 LIMIT 1
 
 -- COMMAND ----------
@@ -37,12 +37,12 @@ fixed_value from anallasw_bronze_orders_tv
 CREATE TABLE IF NOT EXISTS tabular.dataexpert.anallasw_silver_orders_json_dea 
 AS
   SELECT from_json(fixed_value,
-                  'STRUCT<customer_id: BIGINT, items: ARRAY<STRUCT<category: STRING, details: STRUCT<brand: STRING, color:   STRING>, item_id: BIGINT, name: STRING, price: BIGINT, quantity: BIGINT>>, order_date: STRING, order_id: BIGINT, order_status: STRING, payment_method: STRING, total_amount: BIGINT, transaction_timestamp: STRING>') AS json_value
-  FROM anallasw_bronze_orders_tv
+                  'STRUCT<customer_id: BIGINT, items: ARRAY<STRUCT<category: STRING, details: STRUCT<brand: STRING, color:STRING>, item_id: BIGINT, name: STRING, price: BIGINT, quantity: BIGINT>>, order_date: STRING, order_id: BIGINT, order_status: STRING, payment_method: STRING, total_amount: BIGINT, transaction_timestamp: STRING>') AS json_value
+                 FROM anallasw_bronze_orders_tv
 
 -- COMMAND ----------
 
-select * from tabular.dataexpert.anallasw_silver_orders_json_dea
+select * from tabular.dataexpert.anallasw_silver_orders_json_dea order by json_value.order_id
 
 -- COMMAND ----------
 
